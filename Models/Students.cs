@@ -7,5 +7,20 @@ namespace StudentExercisesAPI.Models
 {
     public class Students
     {
+        public int Id { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        public string SlackHandle { get; set; }
+
+        public int CohortId { get; set; }
+
+        public Cohorts Cohort { get; set; }
+
+        public List<Exercises> Exercise { get; set; } = new List<Exercises>();
+
+
     }
 }
