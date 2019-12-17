@@ -19,7 +19,7 @@ namespace StudentExercisesAPI.Models
 
         public Cohorts Cohort { get; set; }
 
-        public List<Exercises> Exercise { get; set; } = new List<Exercises>();
+        public List<Exercises> Exercises { get; set; } = new List<Exercises>();
 
 
     }
