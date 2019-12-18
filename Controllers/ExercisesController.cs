@@ -63,7 +63,81 @@ namespace StudentExercisesAPI.Controllers
             }
         }
 
-        [HttpGet("{id}", Name = "GetExercise")]
+
+        [HttpGet]
+        public async Task<IActionResult> GetStudentExercises([FromQuery]int Id, string include)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    List<Exercises> exercises = new List<Exercises>();
+                    // if they are looking for exercises
+                    if (include != null)
+                    {
+                        cmd.CommandText = @"SELECT s.FirstName, s.LastName, s.Id, se.Id, se.StudentId, se.ExerciseId, e.ExerciseName, e.Id, e.ProgrammingLanguage
+                                            FROM StudentExercises se
+                                            LEFT JOIN Student s ON s.Id = se.StudentId
+                                            LEFT JOIN Exercise e ON e.Id = se.ExerciseId";
+                    }
+                    else
+                    {
+                        cmd.CommandText = @"SELECT se.Id, se.StudentId, se.ExerciseId, e.ExerciseName, e.Id, e.ProgrammingLanguage
+                                            FROM StudentExercises se
+                                            LEFT JOIN Exercise e ON e.Id = se.ExerciseId";
+                    }
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    List<Students> students = new List<Students>();
+                    //List<Exercise> this is where we are storing all of the exercises from the sql statement
+                    while (reader.Read())
+                    {
+                        
+                        if (include != null)
+                        {
+                            Students student = new Students
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                                LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                                SlackHandle = reader.GetString(reader.GetOrdinal("SlackHandle")),
+                                CohortId = reader.GetInt32(reader.GetOrdinal("CohortId")),
+
+                            };
+                                students.Add(student);
+                        }
+                        Exercises exercise = new Exercises
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            ExerciseName = reader.GetString(reader.GetOrdinal("ExerciseName")),
+                            ProgrammingLanguage = reader.GetString(reader.GetOrdinal("ProgrammingLanguage"))
+                        
+                            //this is considered all of the student exercises they are currently working on
+                            student = students
+                        };
+                    exercises.Add(exercise);
+                }
+                reader.Close();
+                return Ok(exercises);
+            }
+        }
+    }
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    [HttpGet("{id}", Name = "GetExercise")]
         public async Task<IActionResult> Get([FromRoute] int id)
         {
            
