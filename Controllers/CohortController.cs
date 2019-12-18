@@ -33,7 +33,7 @@ namespace StudentExercisesAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] string q)
         {
             using (SqlConnection conn = Connection)
             {
@@ -53,8 +53,9 @@ namespace StudentExercisesAPI.Controllers
                                i.CohortId AS InstructorCohortId,
                                 i.Specialty,
 	                           i.Id AS InstructorId
-                                    FROM Cohort c LEFT JOIN Student s ON s.CohortId = c.id
-                                    LEFT JOIN Instructor i ON i.CohortId = c.id";
+                                    FROM Cohorts c LEFT JOIN Student s ON s.CohortId = c.id
+                                    LEFT JOIN Instructors i ON i.CohortId = c.id
+                                    WHERE Cohorts LIKE q";
                     SqlDataReader reader = cmd.ExecuteReader();
 
 

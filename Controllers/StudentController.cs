@@ -33,7 +33,7 @@ namespace StudentExercisesAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery]int Id, string include)
+        public async Task<IActionResult> Get([FromQuery]int Id, string include, string q)
         {
             using (SqlConnection conn = Connection)
             {
@@ -48,7 +48,8 @@ namespace StudentExercisesAPI.Controllers
                                         FROM Student s
                                         LEFT JOIN Cohort c ON s.CohortId = c.Id
                                         INNER JOIN  StudentExercises se ON se.StudentId = s.Id
-                                        INNER JOIN Exercise e ON e.Id = se.ExerciseId";
+                                        INNER JOIN Exercise e ON e.Id = se.ExerciseId
+                                        Where 1=1";
                     }
                     else
                     {

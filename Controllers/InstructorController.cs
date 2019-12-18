@@ -33,7 +33,7 @@ namespace StudentExercisesAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] string q)
         {
             using (SqlConnection conn = Connection)
             {
@@ -42,7 +42,8 @@ namespace StudentExercisesAPI.Controllers
                 {
                     cmd.CommandText = @"SELECT i.Id, i.FirstName, i.LastName, i.SlackHandle, i.Specialty,
                                             i.CohortId, c.CohortName
-                                            FROM Instructor i INNER JOIN Cohort c ON i.CohortId = c.id";
+                                            FROM Instructors i INNER JOIN Cohorts c ON i.CohortId = c.id
+                                            WHERE Instructors LIKE q";
                     SqlDataReader reader = cmd.ExecuteReader();
                     List<Instructors> instructors = new List<Instructors>();
 
