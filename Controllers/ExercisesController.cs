@@ -65,7 +65,7 @@ namespace StudentExercisesAPI.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetStudentExercises([FromQuery]int Id, string include)
+        public async Task<IActionResult> GetStudentExercises([FromQuery]int Id, string include, string q)
         {
             using (SqlConnection conn = Connection)
             {
@@ -79,7 +79,8 @@ namespace StudentExercisesAPI.Controllers
                         cmd.CommandText = @"SELECT s.FirstName, s.LastName, s.Id, se.Id, se.StudentId, se.ExerciseId, e.ExerciseName, e.Id, e.ProgrammingLanguage
                                             FROM StudentExercises se
                                             LEFT JOIN Student s ON s.Id = se.StudentId
-                                            LEFT JOIN Exercise e ON e.Id = se.ExerciseId";
+                                            LEFT JOIN Exercise e ON e.Id = se.ExerciseId
+                                            WHERE 1=1";
                     }
                     else
                     {
@@ -110,7 +111,7 @@ namespace StudentExercisesAPI.Controllers
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
                             ExerciseName = reader.GetString(reader.GetOrdinal("ExerciseName")),
-                            ProgrammingLanguage = reader.GetString(reader.GetOrdinal("ProgrammingLanguage"))
+                            ProgrammingLanguage = reader.GetString(reader.GetOrdinal("ProgrammingLanguage")),
                         
                             //this is considered all of the student exercises they are currently working on
                             student = students
